@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DarkGameStudio | Where Shadows Play</title>
+    <style>
+        :root {
+            --bg-deep: #0a0a0f;
+            --bg-card: #111118;
+            --accent: #c0392b;
+            --accent-bright: #e74c3c;
+            --accent-glow: #ff3b3b;
+            --gold: #d4a574;
+            --text: #ccc;
+            --text-light: #999;
+            --text-bright: #eee;
+            --border-subtle: #1e1e2a;
+            --nav-bg: rgba(10, 10, 18, 0.92);
+            --font-heading: 'Georgia', 'Times New Roman', serif;
+            --font-body: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: #2a2a35 #0a0a0f;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a2a35;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3a3a48;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-deep);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ============ PARTICLES CANVAS ============ */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ============ NAVIGATION ============ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: var(--nav-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border-subtle);
+            transition: all 0.35s ease;
+        }
+        .navbar.scrolled {
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
+            border-bottom-color: #2a2a3a;
+        }
+        .nav-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            z-index: 1001;
+        }
+        .nav-logo .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #fff;
+            font-family: var(--font-heading);
+            box-shadow: 0 0 20px rgba(192, 57, 43, 0.45);
+            transition: box-shadow 0.4s;
+        }
+        .nav-logo:hover .logo-icon {
+            box-shadow: 0 0 35px rgba(231, 76, 60, 0.7);
+        }
+        .nav-logo .logo-text {
+            font-family: var(--font-heading);
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-bright);
+            letter-spacing: 0.5px;
+        }
+        .nav-logo .logo-text span {
+            color: var(--accent-bright);
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.4rem;
+            align-items: center;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            position: relative;
+            transition: color 0.3s;
+            padding: 4px 0;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-glow);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+        .nav-links a:hover {
+            color: #fff;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        .nav-cta {
+            background: var(--accent);
+            color: #fff !important;
+            padding: 10px 22px !important;
+            border-radius: 6px;
+            font-weight: 600 !important;
+            transition: all 0.3s !important;
+            letter-spacing: 0.8px !important;
+            box-shadow: 0 0 18px rgba(192, 57, 43, 0.35);
+        }
+        .nav-cta:hover {
+            background: var(--accent-bright) !important;
+            box-shadow: 0 0 30px rgba(231, 76, 60, 0.6) !important;
+            transform: translateY(-2px);
+        }
+        .nav-cta::after {
+            display: none !important;
+        }
+
+        /* Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1001;
+            background: none;
+            border: none;
+            padding: 6px;
+        }
+        .hamburger span {
+            display: block;
+            width: 28px;
+            height: 2.5px;
+            background: #ddd;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* ============ HERO ============ */
+        .hero {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+        }
+        .hero-content {
+            max-width: 800px;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(192, 57, 43, 0.12);
+            border: 1px solid rgba(192, 57, 43, 0.35);
+            color: var(--accent-bright);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2.8rem, 6vw, 5.5rem);
+            font-weight: 900;
+            color: #f0f0f0;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s 0.15s ease forwards;
+            opacity: 0;
+        }
+        .hero-title .accent {
+            color: var(--accent-glow);
+            text-shadow: 0 0 60px rgba(255, 59, 59, 0.5);
+        }
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #aaa;
+            max-width: 550px;
+            margin: 0 auto 2.5rem;
+            animation: fadeInUp 0.8s 0.3s ease forwards;
+            opacity: 0;
+            letter-spacing: 0.3px;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1.2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s 0.45s ease forwards;
+            opacity: 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: 6px;
+            font-weight: 600;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.35s ease;
+            border: none;
+            font-family: var(--font-body);
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 0 25px rgba(192, 57, 43, 0.4);
+        }
+        .btn-primary:hover {
+            background: var(--accent-bright);
+            box-shadow: 0 0 40px rgba(231, 76, 60, 0.65);
+            transform: translateY(-3px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: #ddd;
+            border: 2px solid #3a3a4a;
+        }
+        .btn-outline:hover {
+            border-color: #ddd;
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.08);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============ SECTION STYLES ============ */
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 6rem 2rem;
+        }
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-label {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent-bright);
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: #eee;
+            margin-bottom: 1rem;
+            letter-spacing: -0.3px;
+        }
+        .section-desc {
+            color: #888;
+            max-width: 600px;
+            margin-bottom: 3.5rem;
+            font-size: 1.05rem;
+        }
+
+        /* ============ GAMES GRID ============ */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        .game-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            group: true;
+        }
+        .game-card:hover {
+            transform: translateY(-8px);
+            border-color: #3a3a50;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(192, 57, 43, 0.1);
+        }
+        .game-card-image {
+            height: 220px;
+            position: relative;
+            overflow: hidden;
+            background: #0d0d16;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .game-card-image .placeholder-art {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            background: linear-gradient(135deg, #141420, #1a1a2e);
+            color: #2a2a40;
+            transition: all 0.5s;
+        }
+        .game-card:hover .placeholder-art {
+            color: #4a4a65;
+            background: linear-gradient(135deg, #181828, #202038);
+        }
+        .game-card-image .game-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(0, 0, 0, 0.75);
+            color: #ffcc00;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 204, 0, 0.3);
+        }
+        .game-card-body {
+            padding: 1.6rem 1.5rem 1.8rem;
+        }
+        .game-card-body h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            color: #eee;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.3px;
+        }
+        .game-card-body .game-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 0.8rem;
+        }
+        .game-tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.04);
+            color: #999;
+            padding: 4px 10px;
+            border-radius: 3px;
+            border: 1px solid #222;
+        }
+        .game-card-body p {
+            color: #777;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* ============ ABOUT ============ */
+        #about {
+            background: rgba(10, 10, 18, 0.7);
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        .about-text .stat-row {
+            display: flex;
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+        .stat-item h4 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            color: var(--accent-glow);
+            font-weight: 800;
+            line-height: 1;
+        }
+        .stat-item span {
+            font-size: 0.85rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .about-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .about-glow-box {
+            width: 100%;
+            max-width: 380px;
+            aspect-ratio: 1;
+            background: radial-gradient(circle at center, #1a1020 0%, #0a0a14 70%);
+            border-radius: 20px;
+            border: 1px solid #2a1a30;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            color: #3a1a2a;
+            box-shadow: 0 0 80px rgba(192, 57, 43, 0.08);
+            transition: all 0.5s;
+        }
+        .about-glow-box:hover {
+            box-shadow: 0 0 120px rgba(192, 57, 43, 0.18);
+            color: #5a2a3a;
+        }
+
+        /* ============ TEAM ============ */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+        .team-member {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem 1.5rem 1.8rem;
+            transition: all 0.35s;
+        }
+        .team-member:hover {
+            border-color: #3a3a50;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+        .team-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a1a2e, #252540);
+            margin: 0 auto 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            color: #444;
+            border: 2px solid #2a2a3a;
+            transition: all 0.4s;
+        }
+        .team-member:hover .team-avatar {
+            border-color: var(--accent);
+            color: #666;
+            box-shadow: 0 0 25px rgba(192, 57, 43, 0.2);
+        }
+        .team-member h4 {
+            color: #ddd;
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+        }
+        .team-member .role {
+            font-size: 0.8rem;
+            color: var(--accent-bright);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* ============ CONTACT ============ */
+        #contact {
+            background: rgba(10, 10, 18, 0.8);
+            border-top: 1px solid var(--border-subtle);
+        }
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .contact-form input,
+        .contact-form textarea {
+            background: #111118;
+            border: 1px solid #252535;
+            padding: 14px 18px;
+            border-radius: 8px;
+            color: #ddd;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            resize: vertical;
+            transition: all 0.3s;
+            outline: none;
+        }
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 18px rgba(192, 57, 43, 0.15);
+            background: #14141e;
+        }
+        .contact-form textarea {
+            min-height: 130px;
+        }
+        .contact-form .btn {
+            align-self: flex-start;
+        }
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+            justify-content: center;
+        }
+        .contact-info-item {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+        .contact-info-item .icon-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(192, 57, 43, 0.1);
+            border: 1px solid rgba(192, 57, 43, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            color: var(--accent-bright);
+        }
+        .contact-info-item h5 {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+            letter-spacing: 0.5px;
+        }
+        .contact-info-item span {
+            color: #777;
+            font-size: 0.85rem;
+        }
+
+        /* ============ FOOTER ============ */
+        footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 2.5rem 2rem;
+            border-top: 1px solid var(--border-subtle);
+            color: #666;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        footer span {
+            color: var(--accent-bright);
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 900px) {
+            .about-grid,
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+            .about-visual {
+                order: -1;
+            }
+            .about-glow-box {
+                max-width: 240px;
+                font-size: 4rem;
+            }
+            .hero-title {
+                font-size: 2.4rem;
+            }
+        }
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: rgba(10, 10, 18, 0.97);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: center;
+                gap: 2rem;
+                transition: right 0.4s ease;
+                border-left: 1px solid var(--border-subtle);
+                z-index: 1000;
+            }
+            .nav-links.active {
+                right: 0;
+            }
+            .nav-links a {
+                font-size: 1.1rem;
+            }
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            .team-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            }
+            .hero {
+                padding: 5rem 1.2rem 3rem;
+            }
+            section {
+                padding: 4rem 1.2rem;
+            }
+            .stat-row {
+                flex-wrap: wrap;
+                gap: 1.5rem;
+            }
+        }
+        @media (max-width: 400px) {
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Canvas -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <div class="logo-icon">DG</div>
+                <span class="logo-text">Dark<span>Studio</span></span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" onclick="closeNav()">Home</a></li>
+                <li><a href="#games" onclick="closeNav()">Games</a></li>
+                <li><a href="#about" onclick="closeNav()">About</a></li>
+                <li><a href="#team" onclick="closeNav()">Team</a></li>
+                <li><a href="#contact" class="nav-cta" onclick="closeNav()">Contact</a></li>
+            </ul>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">🎮 Independent Game Studio</div>
+            <h1 class="hero-title">We Craft <span class="accent">Dark</span> Immersive Worlds</h1>
+            <p class="hero-subtitle">
+                DarkGameStudio creates atmospheric, story-driven experiences that linger long after the screen fades to black.
+            </p>
+            <div class="hero-buttons">
+                <a href="#games" class="btn btn-primary">Explore Our Games</a>
+                <a href="#about" class="btn btn-outline">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games -->
+    <section id="games">
+        <div class="section-container">
+            <span class="section-label">Our Games</span>
+            <h2 class="section-title">Titles From the Shadows</h2>
+            <p class="section-desc">Each game is a handcrafted journey into darkness, mystery, and atmospheric storytelling.</p>
+            <div class="games-grid">
+                <div class="game-card">
+                    <div class="game-card-image">
+                        <div class="placeholder-art">🌑</div>
+                        <span class="game-badge">New Release</span>
+                    </div>
+                    <div class="game-card-body">
+                        <h3>Eclipse Protocol</h3>
+                        <div class="game-tags">
+                            <span class="game-tag">Horror</span>
+                            <span class="game-tag">Survival</span>
+                            <span class="game-tag">PC</span>
+                        </div>
+                        <p>A first-person psychological horror set in an abandoned orbital station. Shadows have memory here.</p>
+                    </div>
+                </div>
+                <div class="game-card">
+                    <div class="game-card-image">
+                        <div class="placeholder-art">🗡️</div>
+                        <span class="game-badge">Award Winner</span>
+                    </div>
+                    <div class="game-card-body">
+                        <h3>Ashen Vale</h3>
+                        <div class="game-tags">
+                            <span class="game-tag">RPG</span>
+                            <span class="game-tag">Dark Fantasy</span>
+                            <span class="game-tag">PC / Console</span>
+                        </div>
+                        <p>A grim open-world RPG where every choice carves your fate into the dying embers of a forgotten kingdom.</p>
+                    </div>
+                </div>
+                <div class="game-card">
+                    <div class="game-card-image">
+                        <div class="placeholder-art">🕯️</div>
+                    </div>
+                    <div class="game-card-body">
+                        <h3>Whisper Deep</h3>
+                        <div class="game-tags">
+                            <span class="game-tag">Adventure</span>
+                            <span class="game-tag">Puzzle</span>
+                            <span class="game-tag">Mobile</span>
+                        </div>
+                        <p>Descend into an ancient subterranean labyrinth. Light is your only ally — and it's running out.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+        <div class="section-container">
+            <div class="about-grid">
+                <div class="about-text">
+                    <span class="section-label">About Us</span>
+                    <h2 class="section-title">Forged in Darkness, Driven by Passion</h2>
+                    <p style="color:#999; margin-bottom:1rem;">
+                        DarkGameStudio was founded in 2020 by a small team of developers who believe the best stories are told in the shadows. We blend atmospheric design with tight gameplay to create unforgettable experiences.
+                    </p>
+                    <p style="color:#888;">
+                        Based in Seattle, our fully remote team spans 8 countries. We value creative freedom, meticulous world-building, and the power of a well-told story.
+                    </p>
+                    <div class="stat-row">
+                        <div class="stat-item">
+                            <h4>12+</h4>
+                            <span>Games Shipped</span>
+                        </div>
+                        <div class="stat-item">
+                            <h4>4M+</h4>
+                            <span>Players Worldwide</span>
+                        </div>
+                        <div class="stat-item">
+                            <h4>98%</h4>
+                            <span>Positive Reviews</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-visual">
+                    <div class="about-glow-box">⚫</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team -->
+    <section id="team">
+        <div class="section-container">
+            <span class="section-label">The Crew</span>
+            <h2 class="section-title">Minds Behind the Dark</h2>
+            <p class="section-desc">A tightly-knit team of artists, engineers, and storytellers united by a love for the eerie and the extraordinary.</p>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="team-avatar">🦊</div>
+                    <h4>Kael Voss</h4>
+                    <span class="role">Creative Director</span>
+                </div>
+                <div class="team-member">
+                    <div class="team-avatar">🐺</div>
+                    <h4>Sera Nyx</h4>
+                    <span class="role">Lead Artist</span>
+                </div>
+                <div class="team-member">
+                    <div class="team-avatar">🦉</div>
+                    <h4>Marcus Dorne</h4>
+                    <span class="role">Senior Engineer</span>
+                </div>
+                <div class="team-member">
+                    <div class="team-avatar">🐉</div>
+                    <h4>Lina Graves</h4>
+                    <span class="role">Narrative Designer</span>
+                </div>
+                <div class="team-member">
+                    <div class="team-avatar">🖤</div>
+                    <h4>Rook Asher</h4>
+                    <span class="role">Sound Designer</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+        <div class="section-container">
+            <span class="section-label">Get In Touch</span>
+            <h2 class="section-title">Summon Us</h2>
+            <p class="section-desc">Have a project in mind? Want to publish with us? Or just want to say hi? Drop a message.</p>
+            <div class="contact-wrapper">
+                <form class="contact-form" id="contactForm" onsubmit="handleSubmit(event)">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="email" placeholder="Your Email" required>
+                    <textarea placeholder="Your Message..." required></textarea>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+                <div class="contact-info">
+                    <div class="contact-info-item">
+                        <div class="icon-circle">📍</div>
+                        <div>
+                            <h5>Studio Location</h5>
+                            <span>Seattle, WA — Remote Worldwide</span>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <div class="icon-circle">✉️</div>
+                        <div>
+                            <h5>Email</h5>
+                            <span>hello@darkgamestudio.com</span>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <div class="icon-circle">💬</div>
+                        <div>
+                            <h5>Discord</h5>
+                            <span>discord.gg/darkstudio</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 <span>DarkGameStudio</span>. All rights reserved. Crafted in the shadows.</p>
+    </footer>
+
+    <script>
+        // ============ PARTICLES SYSTEM ============
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouseX = -1000;
+        let mouseY = -1000;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initParticles();
+        });
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.8 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.35;
+                this.speedY = (Math.random() - 0.5) * 0.35;
+                this.opacity = Math.random() * 0.55 + 0.1;
+                this.opacitySpeed = (Math.random() - 0.5) * 0.006;
+                this.connectDist = 130;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.opacity += this.opacitySpeed;
+                if (this.opacity > 0.7) this.opacitySpeed = -Math.abs(this.opacitySpeed);
+                if (this.opacity < 0.08) this.opacitySpeed = Math.abs(this.opacitySpeed);
+
+                // Mouse interaction
+                const dx = mouseX - this.x;
+                const dy = mouseY - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 180) {
+                    const force = (180 - dist) / 180;
+                    this.x -= dx * force * 0.015;
+                    this.y -= dy * force * 0.015;
+                    this.opacity = Math.min(0.8, this.opacity + 0.015);
+                }
+
+                // Wrap around
+                if (this.x < -20) this.x = canvas.width + 20;
+                if (this.x > canvas.width + 20) this.x = -20;
+                if (this.y < -20) this.y = canvas.height + 20;
+                if (this.y > canvas.height + 20) this.y = -20;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(180,160,150,${this.opacity})`;
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            const count = Math.min(Math.floor((canvas.width * canvas.height) / 8500), 140);
+            particles = [];
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+        initParticles();
+
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < particles[i].connectDist) {
+                        const alpha = (1 - dist / particles[i].connectDist) * 0.18;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(200,170,160,${alpha})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            drawConnections();
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        document.addEventListener('touchmove', (e) => {
+            mouseX = e.touches[0].clientX;
+            mouseY = e.touches[0].clientY;
+        }, { passive: true });
+        document.addEventListener('mouseleave', () => {
+            mouseX = -1000;
+            mouseY = -1000;
+        });
+
+        // ============ NAVIGATION ============
+        const navbar = document.getElementById('navbar');
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 40) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        function closeNav() {
+            hamburger.classList.remove('active');
+            navLinks.classList.remove('active');
+        }
+
+        // Close nav when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', closeNav);
+        });
+
+        // Close nav when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navbar.contains(e.target) && navLinks.classList.contains('active')) {
+                closeNav();
+            }
+        });
+
+        // ============ CONTACT FORM ============
+        function handleSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const btn = form.querySelector('button');
+            const originalText = btn.textContent;
+            btn.textContent = 'Message Sent! ✓';
+            btn.style.background = '#27ae60';
+            btn.style.boxShadow = '0 0 25px rgba(39,174,96,0.5)';
+            btn.disabled = true;
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+                btn.style.boxShadow = '';
+                btn.disabled = false;
+                form.reset();
+            }, 2500);
+        }
+
+        // ============ REVEAL ON SCROLL ============
+        const observerOptions = { threshold: 0.15, rootMargin: '0px 0px -40px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.game-card, .team-member, .about-glow-box, .contact-info-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.7s cubic-bezier(0.22, 0.61, 0.36, 1)';
+            observer.observe(el);
+        });
+
+        // Trigger initial check
+        setTimeout(() => {
+            document.querySelectorAll('.game-card, .team-member, .about-glow-box, .contact-info-item').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }
+            });
+        }, 300);
+
+        console.log('%c🖤 DarkGameStudio %cLoaded',
+            'font-size:1.5em;color:#e74c3c;font-weight:bold;',
+            'color:#aaa;');
+        console.log('%cWelcome to the shadows. Explore our console.',
+            'color:#888;font-style:italic;');
+    </script>
+</body>
+</html>
